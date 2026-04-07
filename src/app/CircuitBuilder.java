@@ -9,82 +9,44 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CircuitBuilder {
-    public CircuitBuilder() {}
 
-    public List<Composant> construireCircuit(String cheminFichier) {
+    private ObjectMapper mapper = new ObjectMapper();
 
-        List<Composant> listeComposant = new ArrayList<>();
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            // on lit le fichier
-            JsonNode donneescircuit = mapper.readTree(new File(cheminFichier));
-            // On boucle sur chaque noeud
-            for (JsonNode noeudComposant : donneescircuit) {
-                // Extraction des donnees
-                String type = noeudComposant.get("type").asText();
-
-                // 4. Création selon le type
-                if ("resistance".equals(type)) {
-
-                    double valeur = noeudComposant.get("valeur").asDouble();
-                    listeComposant.add(new Resistance("resisitance",valeur));
-
-                } else if ("serie".equals(type)) {
-
-                    List<Composant> sousComposants = lireComposants(noeudComposant.get("composants"));
-                    listeComposant.add(new CircuitSerie("serie", sousComposants));
-
-                } else if ("parallele".equals(type)) {
-
-                    List<Composant> sousComposants = lireComposants(noeudComposant.get("composants"));
-                    listeComposant.add(new CircuitParallele("parallele",sousComposants));
-
-                } else {
-                    throw new IllegalArgumentException("Type inconnu : " + type);
-                }
-            }
-
-        } catch (IOException e) {
-
-            System.err.println("Erreur de lecture : " + e.getMessage());
-
-        }
-        return listeComposant;
+    public Composant construireDepuisFichier(File fichier) throws IOException {
+        JsonNode racine = mapper.readTree(fichier);
+        return parseComposant(racine.get("circuit"));
     }
 
-    private List<Composant> lireComposants(JsonNode node) {
+    private Composant parseComposant(JsonNode noeud) {
+        String type = noeud.get("type").asText();
 
+        switch (type) {
+
+            case "resistance":
+                return new Resistance(noeud.get("valeur").asDouble());
+
+            case "serie":
+                return new CircuitSerie(parseListe(noeud.get("composants")));
+
+            case "parallele":
+                return new CircuitParallele(parseListe(noeud.get("composants")));
+
+            default:
+                throw new IllegalArgumentException("Type inconnu : " + type);
+        }
+    }
+
+    private List<Composant> parseListe(JsonNode tableau) {
         List<Composant> liste = new ArrayList<>();
 
-        for (JsonNode noeud : node) {
+        if (tableau == null) {
+            return liste; // validation minimale
+        }
 
-            String type = noeud.get("type").asText();
-
-            if ("resistance".equals(type)) {
-
-                double valeur = noeud.get("valeur").asDouble();
-                liste.add(new Resistance("resistance",valeur));
-
-            } else if ("serie".equals(type)) {
-
-                List<Composant> sous = lireComposants(noeud.get("composants"));
-                liste.add(new CircuitSerie("serie",sous));
-
-            } else if ("parallele".equals(type)) {
-
-                List<Composant> sous = lireComposants(noeud.get("composants"));
-                liste.add(new CircuitParallele("parallele",sous));
-
-            } else {
-                throw new IllegalArgumentException("Type inconnu : " + type);
-            }
+        for (JsonNode n : tableau) {
+            liste.add(parseComposant(n));
         }
 
         return liste;
     }
 }
-
-
-
-
-

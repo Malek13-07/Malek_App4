@@ -1,41 +1,46 @@
 package electronique;
 
-import java.util.*;
-public abstract class Circuit {
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-    private List<Composant> listeComposants;
-    //  type de circuit "serie" ou "parallele"
-    private String type ;
+public abstract class Circuit extends Composant {
 
+    private final List<Composant> listeComposants;
 
-    public Circuit(String type , Composant listeComposants){
-        this.type=type;
+    public Circuit(String type, List<Composant> listeComposants) {
+        super(type);
         this.listeComposants = new ArrayList<>();
-    }
-
-    public void ajouterCmposant(Composant obj){
-        if(obj!=null){
-            listeComposants.add(obj);
+        if (listeComposants != null) {
+            for (Composant c : listeComposants) {
+                if (c != null) {
+                    this.listeComposants.add(c);
+                }
+            }
         }
     }
-
     public List<Composant> getListeComposants() {
         return listeComposants;
     }
 
-    public double calculerResistance() {
-        double valeurTotale = 0;
-        for (Composant c : listeComposants){
-            if(c==null){
-                valeurTotale+=0;
-            }
-            else if("serie".equals(type)){
-                valeurTotale+=c.calculerResistance();
-            }else{
-                valeurTotale+=c.calculerResistance();
-            }
-        }
-        return valeurTotale;
+    public void ajouterComposant(Composant composant) {
+        listeComposants.add(composant);
     }
 
+    @Override
+    public String afficher(int profondeur) {
+        String resultat = "";
+
+        for (int i = 0; i < profondeur; i++) {
+            resultat += "  ";
+        }
+
+        resultat += "Circuit [" + type + "] -> " + calculerResistance() + " ohms\n";
+
+        for (Composant c : listeComposants) {
+            resultat += c.afficher(profondeur + 1) + "\n";
+        }
+
+        return resultat;
+    }
 }

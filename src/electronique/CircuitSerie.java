@@ -1,17 +1,20 @@
 package electronique;
 
-public class CircuitSerie extends Circuit  {
-    private String type = "serie";
+import java.util.List;
 
-    public CircuitSerie (String type, Composant listeComposant){
-        super(type , listeComposant );
+public class CircuitSerie extends Circuit {
+
+    public CircuitSerie(List<Composant> listeComposants) {
+        super("serie", listeComposants);
     }
 
-    public double calculerResistance(){
-        double valeurTotale = 0;
-        for (Composant c : getListeComposants()){
-            valeurTotale += c.calculerResistance();
+    @Override
+    public double calculerResistance() {
+        double total = 0;
+        for (Composant c : getListeComposants()) {
+            total += c.calculerResistance(); // appel récursif si c est un Circuit
         }
-        return valeurTotale ;
+        return total;
     }
 }
+

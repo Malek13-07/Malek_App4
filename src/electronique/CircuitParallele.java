@@ -1,23 +1,22 @@
 package electronique;
+import java.util.List;
 
-public class CircuitParallele extends Circuit{
+public class CircuitParallele extends Circuit {
 
-    private String type= "parallele";
-
-    public CircuitParallele(String type , Composant listeComposant){
-        super(type,listeComposant);
+    public CircuitParallele(List<Composant> listeComposants) {
+        super("parallele", listeComposants);
     }
 
-    //Calcul en parallèle : 1/R_total = 1/R1 + 1/R2
-
-    public double calculerResistance(){
-        double inverseTotale = 0;
-        for (Composant composant : getListeComposants()) {
-            double r = composant.calculerResistance();
+    @Override
+    public double calculerResistance() {
+        double inverseTotal = 0;
+        for (Composant c : getListeComposants()) {
+            double r = c.calculerResistance(); // appel récursif si c est un Circuit
             if (r != 0) {
-                inverseTotale += 1.0 / r;
+                inverseTotal += 1.0 / r;
             }
         }
-        return inverseTotale ;
+        // Si tous les composants ont R=0, on retourne 0 pour éviter une division par zéro
+        return (inverseTotal != 0) ? 1.0 / inverseTotal : 0;
     }
 }
