@@ -40,7 +40,7 @@ public class CircuitBuilder {
         List<Composant> liste = new ArrayList<>();
 
         if (tableau == null) {
-            return liste; // validation minimale
+            return liste;
         }
 
         for (JsonNode n : tableau) {

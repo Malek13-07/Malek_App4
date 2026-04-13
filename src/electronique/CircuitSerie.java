@@ -12,7 +12,7 @@ public class CircuitSerie extends Circuit {
     public double calculerResistance() {
         double total = 0;
         for (Composant c : getListeComposants()) {
-            total += c.calculerResistance(); // appel récursif si c est un Circuit
+            total += c.calculerResistance();
         }
         return total;
     }

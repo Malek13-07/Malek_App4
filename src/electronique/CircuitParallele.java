@@ -11,7 +11,7 @@ public class CircuitParallele extends Circuit {
     public double calculerResistance() {
         double inverseTotal = 0;
         for (Composant c : getListeComposants()) {
-            double r = c.calculerResistance(); // appel récursif si c est un Circuit
+            double r = c.calculerResistance();
             if (r != 0) {
                 inverseTotal += 1.0 / r;
             }

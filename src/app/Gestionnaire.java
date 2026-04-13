@@ -13,7 +13,7 @@ public class Gestionnaire {
         boolean continuer = true;
 
         while (continuer) {
-            File dossier = new File("src/donnees"); // ou "donnees" si tu déplaces le dossier à la racine
+            File dossier = new File("src/donnees");
             List<File> fichiers = new ArrayList<>();
 
             // Parcours des fichiers et sous-dossiers
@@ -67,7 +67,6 @@ public class Gestionnaire {
                 System.out.println("Erreur lors de la lecture ou du calcul : " + e.getMessage());
             }
 
-            // Menu recommencer / quitter
             System.out.print("[R] recommencer / [Q] quitter : ");
             String saisie = scanner.nextLine().trim().toUpperCase();
 

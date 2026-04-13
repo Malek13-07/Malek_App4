@@ -15,13 +15,6 @@ public abstract class Composant {
         return type;
     }
 
-    /**
-     * Calcule la résistance équivalente de ce composant.
-     * Pour une Resistance, retourne sa valeur directement.
-     * Pour un Circuit, déclenche le calcul récursif sur ses sous-composants.
-     *
-     * @return résistance équivalente en ohms (Ω)
-     */
     public abstract double calculerResistance();
     public abstract String afficher(int profondeur);
 }
